@@ -4,8 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/ui/detail_page.dart';
+import 'package:restaurant_app/ui/favorite_list_page.dart';
 import 'package:restaurant_app/ui/search_restaurant_page.dart';
+import 'package:restaurant_app/ui/setting_page.dart';
+import 'package:restaurant_app/utils/notification_helper.dart';
 import 'package:restaurant_app/widgets/card_restaurant.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,15 +22,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<RestaurantResult> _restaurant;
+  // late Future<RestaurantResult> _restaurant;
   TextEditingController editingController = TextEditingController();
-  String search = "";
+  // String search = "";
+
+  final NotificationHelper _notificationHelper = NotificationHelper();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _restaurant = ApiService().restaurantlist();
+    _notificationHelper.configureSelectNotificationSubject(DetailPage.routeName);
+    // _restaurant = ApiService(http.Client()).restaurantlist();
   }
 
   Widget _buildList(BuildContext context) {
@@ -62,6 +70,24 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Restaurant'),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, SettingPage.routeName);
+            },
+            icon: Icon(
+              Icons.settings,
+              color: Colors.white,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, FavoriteListPage.routeName);
+            },
+            icon: Icon(
+              Icons.favorite,
+              color: Colors.white,
+            ),
+          ),
           IconButton(
             onPressed: () {
               Navigator.pushNamed(context, SearchRestaurantPage.routeName);
@@ -108,12 +134,19 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => RestaurantProvider(apiService: ApiService()),
+      create: (_) => RestaurantProvider(apiService: ApiService(http.Client())),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         home: _buildAndroid(context),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    selectNotificationSubject.close();
+    super.dispose();
   }
 }

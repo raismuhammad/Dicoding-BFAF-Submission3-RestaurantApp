@@ -12,6 +12,8 @@ class ApiService {
   static const _imageMedium = "https://restaurant-api.dicoding.dev/images/small/";
   static const _imageLarge = "https://restaurant-api.dicoding.dev/images/small/<pictureId>";
 
+  ApiService(http.Client client);
+
   Future<RestaurantResult> restaurantlist() async {
     final response = await http.get(Uri.parse("https://restaurant-api.dicoding.dev/list"));
     if (response.statusCode == 200) {
