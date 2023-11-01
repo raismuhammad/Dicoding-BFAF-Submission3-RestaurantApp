@@ -28,7 +28,7 @@ class NotificationHelper {
 
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveBackgroundNotificationResponse: (details) async {
+      onDidReceiveNotificationResponse: (details) async {
         final payload = details.payload;
 
         if (payload != null) debugPrint('notification payload: $payload');

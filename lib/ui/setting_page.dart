@@ -81,9 +81,9 @@ class SettingPage extends StatelessWidget {
                             }
                           }
                         }
-                      } else {
-                        setReminder(value);
                       }
+                    } else {
+                      setReminder(value);
                     }
                   },
                 );
